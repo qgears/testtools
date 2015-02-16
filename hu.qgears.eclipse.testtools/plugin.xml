@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="hu.qgears.eclipse.testtools.StartupHook"></startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="hu.qgears.eclipse.testtools.RCPTTReportGeneration"
+            description="Generates RCPTT test report in JUnit XML format, from the result of the last test run"
+            id="hu.qgears.eclipse.testtools.RCPTTReportGeneration"
+            name="RCPTT test report in JUnit XML">
+      </command>
+   </extension>
+
+</plugin>
