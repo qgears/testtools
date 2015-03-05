@@ -14,11 +14,4 @@
 	<version>0.9.9-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
-	<repositories>
-		<repository>
-			<id>RCPTT P2 repository</id>
-			<layout>p2</layout>
-			<url>${rcpttRepoUrl}</url>
-		</repository>
-	</repositories>
 </project>
