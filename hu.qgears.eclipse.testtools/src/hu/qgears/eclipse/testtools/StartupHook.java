@@ -1,5 +1,7 @@
 package hu.qgears.eclipse.testtools;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,6 +52,9 @@ public class StartupHook implements IStartup {
 	public static final String SYSPROP_NAME_EXECUTE_COMMAND_AFTER_LAUNCHCFG =
 			"executeCommandAfterLaunchCfg";
 	
+	private static final String SYSPROP_NAME_EXECUTE_COMMAND_BEFORE_LAUNCHCFG = 
+			"executeCommandBeforeLaunchCfg";
+	
 	private static final String LAUNCHCONFIG_NAME_SEPARATOR = ",";
 	
 	/**
@@ -70,6 +75,13 @@ public class StartupHook implements IStartup {
 	private static final String sysPropExecuteCommandAfterLaunchCfg =
 			System.getProperty(SYSPROP_NAME_EXECUTE_COMMAND_AFTER_LAUNCHCFG);
 	
+	
+	/**
+	 * @see #SYSPROP_NAME_EXECUTE_COMMAND_BEFORE_LAUNCHCFG
+	 */
+	private static final String sysPropExecuteCommandBeforeLaunchCfg =
+			System.getProperty(SYSPROP_NAME_EXECUTE_COMMAND_BEFORE_LAUNCHCFG);
+	
 	/**
 	 * Startup hook, performing the operations described in the javadocs of this
 	 * class ({@link StartupHook}).
@@ -86,6 +98,19 @@ public class StartupHook implements IStartup {
 		final ILog log = Platform.getLog(bundleContext.getBundle());
 		
 		log.log(status);
+	}
+	
+	private void logError (String message, Throwable e){
+		log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
+				message, e));
+	}
+	private void logInfo (String message, Throwable e){
+		log(new Status(IStatus.INFO, Activator.PLUGIN_ID, 
+				message,e));
+	}
+	private void logWarning (String message, Throwable e){
+		log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, 
+				message,e));
 	}
 	
 	private void executeCommand(final String commandId) {
@@ -123,15 +148,7 @@ public class StartupHook implements IStartup {
 					for (final ILaunch launch: launchManager.getLaunches()) {
 						terminated |= (launch.isTerminated() &&
 								launch.getLaunchConfiguration().getName().equals(launchConfigName));
-						
-						if (terminated) {
-							Display.getDefault().asyncExec(new Runnable() {
-								
-								@Override
-								public void run() {
-									PlatformUI.getWorkbench().close();
-								}
-							});
+						if (terminated){
 							break;
 						}
 					}
@@ -149,6 +166,15 @@ public class StartupHook implements IStartup {
 				if (sysPropExecuteCommandAfterLaunchCfg != null &&
 						!sysPropExecuteCommandAfterLaunchCfg.isEmpty()) {
 					executeCommand(sysPropExecuteCommandAfterLaunchCfg);
+				}
+				if (terminated) {
+					Display.getDefault().asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							PlatformUI.getWorkbench().close();
+						}
+					});
 				}
 				
 				return new Status(Status.OK, Activator.PLUGIN_ID, 
@@ -176,7 +202,9 @@ public class StartupHook implements IStartup {
 				DebugPlugin.getDefault().getLaunchManager();
 		final ILaunchConfiguration[] eclipseLaunchConfigs = 
 				launchManager.getLaunchConfigurations();
-
+		for (final ILaunchConfiguration eclipseLaunchConfig : eclipseLaunchConfigs) {
+			logInfo("Launch config found: " + eclipseLaunchConfig.getName(),null);
+		}
 		for (final ILaunchConfiguration eclipseLaunchConfig : eclipseLaunchConfigs) {
 			final String eclipseLaunchConfigName = 
 					eclipseLaunchConfig.getName();
@@ -223,26 +251,29 @@ public class StartupHook implements IStartup {
 			
 			@Override
 			public void run() {
+				
+				if (sysPropExecuteCommandBeforeLaunchCfg != null &&
+						!sysPropExecuteCommandBeforeLaunchCfg.isEmpty()) {
+					executeCommand(sysPropExecuteCommandBeforeLaunchCfg);
+				}
+				
 				final String[] launchConfigsToStart = 
 						sysPropStartLaunchConfigs.split(LAUNCHCONFIG_NAME_SEPARATOR);
+				System.out.println("INFO : starting configs "+Arrays.toString(launchConfigsToStart));
 				try {
 					for (final String launchConfigToStart : launchConfigsToStart) {
 						final ILaunch launch = startLaunchConfig(launchConfigToStart);
 						
 						if (launch == null) {
-							log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, 
-									"Launch configuration not found with" +
-									"the name '" + launchConfigToStart + "'"));
+							logWarning("Launch configuration not found with the name '"+ launchConfigToStart + "'",null);
 						} else {
-							log(new Status(IStatus.INFO, Activator.PLUGIN_ID,
-									"Launch configuration automatically " +
-									"started: " + launchConfigToStart));
+							logInfo("Launch configuration automatically " +
+									"started: " + launchConfigToStart, null);
 						}
 					}
 				} catch (final CoreException coreEx) {
-					log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
-							"Exception while enumerating launch " +
-							"configurations; none will be started", coreEx));
+					logError("Exception while enumerating launch " +
+							"configurations; none will be started", coreEx);
 				}
 			}
 
