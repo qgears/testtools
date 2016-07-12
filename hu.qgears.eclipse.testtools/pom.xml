@@ -5,9 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>hu.qgears</groupId>
-		<artifactId>root</artifactId>
-		<version>1.0.0</version>
-		<relativePath>../../parent-poms/root</relativePath>
+		<artifactId>testtools-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../../parent-poms/testtools-parent/</relativePath>
 	</parent>
 	<groupId>hu.qgears</groupId>
 	<artifactId>hu.qgears.eclipse.testtools</artifactId>
