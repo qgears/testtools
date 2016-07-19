@@ -8,5 +8,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<packaging>pom</packaging>
 	<modules>
 		<module>hu.qgears.eclipse.testtools</module>
+		<module>build/hu.qgears.eclipse.testtools.p2</module>
 	</modules>
 </project>

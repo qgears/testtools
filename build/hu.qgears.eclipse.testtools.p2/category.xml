@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+	<!--  Test tools category-->
+	<category-def name="Q-Gears test tools" label="Q-Gears test tools" />
+	<category-def name="Q-Gears test tools sources" label="Q-Gears test tools developer resources">
+		<description>
+			Source bundles for Q-Gears test tools
+		</description>
+	</category-def>
+	<bundle id="hu.qgears.eclipse.testtools">
+		<category name="Q-Gears test tools" />
+	</bundle>
+	<bundle id="hu.qgears.eclipse.testtools.source">
+		<category name="Q-Gears test tools sources" />
+	</bundle>
+
+</site>
