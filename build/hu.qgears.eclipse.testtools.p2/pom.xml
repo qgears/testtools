@@ -24,8 +24,10 @@
 			<id>release</id>
 			<activation>
 				<property>
-					<name>RELEASE</name>
-					<value>true</value>
+					<!-- Publishing release into this P2 repository.
+						This profile is activated when the target folder is specified.
+					 -->
+					<name>target-composite-repository</name>
 				</property>
 			</activation>
 			<build>
