@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Testing tools for Eclipse
 Bundle-SymbolicName: hu.qgears.eclipse.testtools;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: hu.qgears.eclipse.testtools.Activator
 Bundle-Vendor: QGears Ltd.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
