@@ -17,9 +17,9 @@
 
 	<repositories>
 		<repository>
-			<id>indigo-repo</id>
+			<id>eclipse-mars-mirror</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/indigo/</url>
+			<url>http://download.eclipse.org/releases/mars/</url>
 		</repository>
 		<repository>
 			<id>subversive-repo</id>

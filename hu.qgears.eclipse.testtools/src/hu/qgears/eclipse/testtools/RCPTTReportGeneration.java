@@ -18,9 +18,9 @@ import org.eclipse.rcptt.internal.launching.reporting.ReportMaker;
 import org.eclipse.rcptt.launching.IExecutionSession;
 import org.eclipse.rcptt.reporting.core.IReportRenderer;
 import org.eclipse.rcptt.reporting.core.IReportRenderer.IContentFactory;
-import org.eclipse.rcptt.reporting.core.Q7ReportIterator;
-import org.eclipse.rcptt.reporting.internal.FileContentFactory;
-import org.eclipse.rcptt.reporting.internal.JUnitFileReportGenerator;
+import org.eclipse.rcptt.reporting.util.FileContentFactory;
+import org.eclipse.rcptt.reporting.util.JUnitFileReportGenerator;
+import org.eclipse.rcptt.reporting.util.Q7ReportIterator;
 import org.eclipse.rcptt.sherlock.core.streams.SherlockReportOutputStream;
 import org.osgi.framework.BundleContext;
 
