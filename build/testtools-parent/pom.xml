@@ -22,11 +22,6 @@
 			<url>http://download.eclipse.org/releases/mars/</url>
 		</repository>
 		<repository>
-			<id>subversive-repo</id>
-			<layout>p2</layout>
-			<url>http://subversive</url>
-		</repository>
-		<repository>
 			<id>rcptt-repo</id>
 			<layout>p2</layout>
 			<url>http://rcptt</url>

@@ -35,7 +35,6 @@ import org.eclipse.rcptt.reporting.util.JUnitFileReportGenerator;
 import org.eclipse.rcptt.reporting.util.Q7ReportIterator;
 import org.eclipse.rcptt.sherlock.core.streams.SherlockReportOutputStream;
 import org.osgi.framework.BundleContext;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
