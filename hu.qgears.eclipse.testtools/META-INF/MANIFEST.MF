@@ -16,4 +16,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Q-Gears Kft.
 Import-Package: org.osgi.framework;version="1.3.0"
+Export-Package: hu.qgears.eclipse.testtools
 

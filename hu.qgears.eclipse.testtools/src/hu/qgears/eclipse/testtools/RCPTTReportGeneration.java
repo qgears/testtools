@@ -4,6 +4,19 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -16,13 +29,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.rcptt.internal.launching.Q7LaunchManager;
 import org.eclipse.rcptt.internal.launching.reporting.ReportMaker;
 import org.eclipse.rcptt.launching.IExecutionSession;
-import org.eclipse.rcptt.reporting.core.IReportRenderer;
 import org.eclipse.rcptt.reporting.core.IReportRenderer.IContentFactory;
 import org.eclipse.rcptt.reporting.util.FileContentFactory;
 import org.eclipse.rcptt.reporting.util.JUnitFileReportGenerator;
 import org.eclipse.rcptt.reporting.util.Q7ReportIterator;
 import org.eclipse.rcptt.sherlock.core.streams.SherlockReportOutputStream;
 import org.osgi.framework.BundleContext;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Generates a JUnit report on an RCPTT test run, without user interaction.  
@@ -94,7 +111,6 @@ public class RCPTTReportGeneration extends AbstractHandler {
 				try {
 					out = new SherlockReportOutputStream(new BufferedOutputStream(
 							new FileOutputStream(rawReportFile)));
-					
 					new ReportMaker(out).make(executionSession, new NullProgressMonitor());
 				} catch (final FileNotFoundException e) {
 					log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
@@ -118,15 +134,51 @@ public class RCPTTReportGeneration extends AbstractHandler {
 
 		if (tempReportFile != null) {
 			final Q7ReportIterator report = new Q7ReportIterator(tempReportFile);
-			final IReportRenderer reportRenderer = new JUnitFileReportGenerator();
+			final JUnitFileReportGenerator reportRenderer = new JUnitFileReportGenerator();
 			final File outputDir = outputFilePrefix.getParentFile();
 			final String reportFileName = outputFilePrefix.getName();
 			final IContentFactory contentFactory = new FileContentFactory(outputDir);
-
 			reportRenderer.generateReport(contentFactory, reportFileName, 
 					report);
+			for (String reportFile : reportRenderer.getGeneratedFileNames(reportFileName)){
+				try {
+					addSystemProps(new File (outputDir,reportFile));
+				} catch (Exception e) {
+					throw new ExecutionException("Cannot append system properties to report", e);
+				}
+			}
 		}
 		
 		return null;
 	}
+
+	private void addSystemProps(File file) throws Exception {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document d = db.parse(file);
+		NodeList suites = d.getElementsByTagName("testsuite");
+		for (int i = 0 ;i < suites.getLength(); i++){
+			Node suite = suites.item(i);
+			Element pse = d.createElement("properties");
+			appendSystemProperties(d,pse);
+			suite.appendChild(pse);
+		}
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		Result output = new StreamResult(file);
+		Source input = new DOMSource(d);
+		transformer.transform(input, output);
+	}
+	
+
+	private void appendSystemProperties(Document d, Element pse) throws XMLStreamException {
+		Properties ps = System.getProperties();
+		for (Entry<Object, Object> e : ps.entrySet()){
+			Element p = d.createElement("property");
+			p.setAttribute("name",""+e.getKey());
+			p.setAttribute("value",""+e.getValue());
+			pse.appendChild(p);
+		}
+	}
 }
+
