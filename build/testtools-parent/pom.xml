@@ -17,14 +17,9 @@
 
 	<repositories>
 		<repository>
-			<id>eclipse-mars-mirror</id>
+			<id>eclipse-2020-03-mirror</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/mars/</url>
-		</repository>
-		<repository>
-			<id>rcptt-repo</id>
-			<layout>p2</layout>
-			<url>http://rcptt</url>
+			<url>http://download.eclipse.org/releases/2020-03</url>
 		</repository>
 	</repositories>
 	<profiles>
