@@ -12,7 +12,7 @@
 	
 	<groupId>hu.qgears</groupId>
 	<artifactId>testtools-parent</artifactId>
-	<version>1.3.0-SNAPSHOT</version>
+	<version>1.3.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<repositories>
